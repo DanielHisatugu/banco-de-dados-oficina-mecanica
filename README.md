@@ -18,7 +18,7 @@ Modelamos um contexto reduzido de uma oficina mecânica como um segundo desafio 
 
 #### Modelagem
 
-![](/home/daniel/Documents/Bootcamps/DiO/Database/MySQL Workbench files/projeto_oficina_mecanica.png)
+![projeto_oficina_mecanica](/home/daniel/workspace/dio-database-experience2/projeto_oficina_mecanica.png)
 
 Adicionamos entidades e atributos típicos do contexto de oficina mecânica, para que a modelagem represente da melhor forma possível o mundo real. Inserimos a possibilidade de uma auto-peça fornecedora de múltiplas peças automotivas e uma grande gama de serviços possíveis de serem executados na oficina.
 
