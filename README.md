@@ -18,7 +18,7 @@ Modelamos um contexto reduzido de uma oficina mecânica como um segundo desafio 
 
 #### Modelagem
 
-![](banco-de-dados-oficina-mecanica/projeto_oficina_mecanica.png)
+![projeto_oficina_mecanica](https://user-images.githubusercontent.com/102832749/191406836-85de7fe4-8227-440c-a7c1-f4b4827e202c.png)
 
 Adicionamos entidades e atributos típicos do contexto de oficina mecânica, para que a modelagem represente da melhor forma possível o mundo real. Inserimos a possibilidade de uma auto-peça fornecedora de múltiplas peças automotivas e uma grande gama de serviços possíveis de serem executados na oficina.
 
