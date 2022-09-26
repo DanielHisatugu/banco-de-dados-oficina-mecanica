@@ -2,6 +2,8 @@
 
 Modelamos um contexto reduzido de uma oficina mecânica como um segundo desafio do bootcamp Database Experience da [Digital Innovation One (DiO)](https://web.dio.me/track/database-experience) , utilizando a ferramenta MySQL Workbench e os conceitos de primary key e foreign key, criando um esquema conceitual para o cenário proposto.
 
+Num segundo momento realizamos a modelagem do projeto lógico baseado no esquema conceitual. Criamos o Script SQL, persistimos dados para realização de testes, criamos queries SQL com as cláusulas SELECT, WHERE, JOIN, ORDER BY e HAVING para recuperar dados suficientes para obter informações complexas, que nos ajudará a entender melhor o cenário de oficina mecânica para tomada de decisões. 
+
 #### Narrativa do contexto / cenário
 
 - Há um sistema de controle e gerenciamento de execução de ordens de serviço (OS) em uma oficina mecânica;
@@ -16,17 +18,19 @@ Modelamos um contexto reduzido de uma oficina mecânica como um segundo desafio 
 - Uma OS pode ser composta por vários serviços e um mesmo serviço pode estar contido em mais de uma OS;
 - Uma OS pode ter vários tipos de peça e uma peça pode estar presente em mais de uma OS.
 
-#### Modelagem
+#### Modelagem Esquema Conceitual
 
 ![projeto_oficina_mecanica](/home/daniel/workspace/dio-database-experience2/projeto_oficina_mecanica.png)
 
 Adicionamos entidades e atributos típicos do contexto de oficina mecânica, para que a modelagem represente da melhor forma possível o mundo real. Inserimos a possibilidade de uma auto-peça fornecedora de múltiplas peças automotivas e uma grande gama de serviços possíveis de serem executados na oficina.
 
+#### Projeto Lógico
+
+Consta anexo neste repositório o arquivo do MySQL Workbench com o projeto lógico, com o Script SQL, os dados persistimos e as queries SQL.
+
 ##### Conhecimentos e ferramentas:
 
 - Linguagem SQL
-- Full-stack - desafio intermediário
-
 - MySQL Workbench (versão linux/ubuntu)
 - Typora
 - Git / Github
