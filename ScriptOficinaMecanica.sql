@@ -18,7 +18,6 @@ create table clientes(
 	idClientes int primary key,
     idCPessoas int,
     Registro_veiculo varchar(11),
-    Proprietario varchar(45),
 	constraint fk_pessoas_clientes foreign key (idCPessoas) references pessoas(idPessoas)
     );
 
@@ -27,7 +26,6 @@ create table clientes(
 create table mecanicos(
 	idMecanicos int primary key,
     idMPessoas int,
-    CodigoTecnico varchar(3),
     Especialista enum('avaliador', 'manutencao', 'supervisao'),
 	constraint fk_pessoas_mecanicos foreign key (idMPessoas) references pessoas(idPessoas)
     );
@@ -50,10 +48,8 @@ create table veiculos(
 
 create table equipemecanicos(
 	idEMecanicos int,
-    idETabelaMO int,
-    AvaliacaoMecanica varchar(225),
-    ConsultaTabelaMO bool,
-    GeraOS varchar(45),
+    Aval int,
+    Superv int,
     primary key (idEMecanicos, idETabelaMO),
     constraint fk_equipe_mecanicos foreign key (idEMecanicos) references mecanicos(idMecanicos),
     constraint fk_equipe_tabela foreign key ( idETabelaMO) references tabelaMO(idTabelaMO)
@@ -63,9 +59,9 @@ create table equipemecanicos(
 
 create table tabelaMO(
 	idTabelaMO int primary key,
-	CustoHora int,
-	PrecoServicos int,
-    MOEspecialista enum('avaliador', 'manutenção', 'supervisor')
+	CHora_Aval int,
+	CHora_Manut int,
+    CHora_Superv int
 );
 
 -- criação da tabela auto peças
@@ -83,7 +79,8 @@ create table autopecas(
 create table pecas(
 	idPAutoPecas int,
     idPOrdemServico int,
-    PeçasAdquiridasTerceiros varchar(45),
+    Valor varchar(45),
+    Pecas varchar(255),
     primary key (idPAutoPecas, idPOrdemServico),
     constraint fk_pecas_autopecas foreign key (idPAutoPecas) references autopecas(idAutoPecas),
     constraint fk_pecas_ordemservico foreign key (idPOrdemServico) references ordemservico(idOrdemServico)
@@ -94,104 +91,162 @@ create table pecas(
 create table ordemservico(
 	idOrdemServico int primary key,
     idOClientes int,
-    idEquipeMecanicos int,
-    OrdemServico varchar(45),
-    NumOS varchar(45),
+    idOEMecanicos int,
+    idOTabelaMO int,
     DtEmissao varchar(45),
     DtConclusao varchar(45),
-    VrPecas varchar(45),
-    MaoDeObra varchar(45),
-    VrTotal varchar(45),
     ClienteStatusOS enum('pendente', 'revisão', 'aprovada'),
+    Hr_Aval int,
+    Hr_Manut int,
+    Hr_Superv int,
+    StatusOS enum('Em execucao','Supervisao','Concluida'),
 	constraint fk_os_clientes foreign key (idOClientes) references clientes(idClientes),
     constraint fk_os_equipemecanicos foreign key (idEquipeMecanicos) references equipemecanicos(idEMecanicos)
 );
 
--- criação da tabela execução dos serviços
-
-create table execucaoservicos(
-	idServicos int primary key,
-    idExOrdemServico int,
-    ServicosExecutados enum('Sinalizacao', 'Eletrica', 'Fluidos', 'Freios', 'Suspensao', 'Motor', 'Cambio'),
-    StatusOS enum('Em execução', 'Supervisao', 'Concluida'),
-	constraint fk_exec_servicos_os foreign key (idExOrdemServico) references ordemservico(idOrdemServico)
-    );
 
 -- inserção de dados no BD
 
 -- persistência de dados em pessoas
 
-insert into pessoas(CPF, Nome, Endereço, Celular)
-	values (30343708933,'Denilson Diaiow','Rua Escondidinho, 37',14947536626),
-	       (30133378210,'Venilton Vuwow','Av Ventania 256',19966612666),
-           (20134598633,'July Forgot','Tv Unknown 77',4748630911),
-           (12346934422,'Otavio Reis','Tv Gamer 169',5340566712);
+insert into pessoas(idPessoas, CPF, Nome, Endereço, Celular)
+	values (1,30343708933,'Denilson Diaiow','Rua Escondidinho, 37',14947536626),
+	       (2,30133378210,'Venilton Vuwow','Av Ventania 256',19966612666),
+           (3,20134598633,'July Forgot','Tv Unknown 77',4748630911),
+           (4,12346934422,'Otavio Reis','Tv Gamer 169',5340566712),
+           (5,11134295844,'Ketlyn Forgot','Rua Chamego,37',47956093377),
+           (6,12344577299,'Joao Begood','Tv Apertadinha,5',47943434343),
+           (7,23474562591,'Decio Raxadoh','Rua Ipê,36',47933455502),
+           (8,23094823904,'Marcio Fueltech','Rua fumacinha,24',47955339088),
+           (9,94238404938,'Diego Liasch','Rua tracktananov,324',47939849230);
            
 -- persitência de dados em clientes
 
-insert into clientes(RegistroVeiculo,Proprietario)
-	values (379634314,'July Forgot'),
-		   (345665778,'Denilson Diaiow'),
-           (124598314,'Venilton Vuwow'),
-           (123445656,'Otavio Reis');
+insert into clientes(idClientes, idCPessoas, Registro_veiculo)
+	values (201,3,379634314),
+		   (202,5,337766442),
+           (203,6,543388993);
            
 -- persitência de dados em mecanicos
 
-insert into mecanicos(CodigoTecnico, Especialista)
-	values (001,'avaliador'),
-		   (002,'manutencao'),
-           (003,'supervisao');
+insert into mecanicos(idMecanicos, idMPessoas, Especialista)
+	values (101, 1,'avaliador'),
+           (102,4,'manutencao'),
+           (103,2,'supervisao'),
+           (104,8,'manutencao'),
+           (105,7,'manutencao'),
+           (106,9,'manutencao');
            
 -- persitência de dados em veiculos
 
-insert into veiculos(marca, modelo, placa, quilometragem)
-	values ('fiat','palio','hru3832',78000),
-		   ('fiat','punto','hdd3946',109000),
-           ('ford','ka','fka0160',250000),
-           ('mazda','RX8','mzd3000',374000);
+insert into veiculos(idVClientes, idVEMecanicos, Marca, Modelo, Placa, Quilometragem)
+	values (201,102,'mazda RX8','mzd3000',374000),
+           (202,104,'fiat punto','hdd3946',109000),
+           (203,106,'ford ka','fka0160',250000); 
 
 -- persitência de dados em equipemecanicos
 
-insert into equipemecanicos(AvaliacaoMecanica, ConsultaTabelaMO, GeraOS)
-	values ('Freios, fluidos, cambio',true,'geradaOS'),
-		   ('motor, cambio, fluidos, sinalizacao',true,'geradaOS'),
-           ('fluidos',true,'geradaOS');
+insert into equipemecanicos(idEMecanicos, idETabelaMO, Aval, Superv)
+	values (102,2022,101,103),
+           (104,2022,101,103),
+           (105,2022,101,103),
+           (106,2022,101,103);
 
 -- persitência de dados em tabela MO
 
-insert into tabelaMO(CustoHora, PrecoServicos, MOEspecialista)
-	values (180.00,350.00,'manutencao'),
-		   (0.00,120.00,'avaliador'),
-           (150.00,0.00,'supervisor');
+insert into tabelaMO(idTabelaMO, CHora_Aval, CHora_Manut, CHora_Superv)
+	values (2022,150,165,100),
+           (2023,150,165,100),
+           (2024,150,165,100);
 
 -- persitência de dados em autopecas
 
-insert into autopecas(CNPJ, Rz_social, Endereço, Celular)
-	values (25450110000133,'FundoDiQuintal','Av Piedade,33',11947465000),
-		   (23450444000245,'AutoPecaz','Rua Ipe,36',11947335566),
-           (22323435000344,'ClaudiusPecas','Tv Desmanche,12',11983834477);
+insert into autopecas(idAutoPecas, CNPJ, Rz_social, Endereço, Celular)
+	values (301,25450110000133,'FundoDiQuintal Korea Co.','Av Piedade,33',11947465000),
+           (302,23450444000245,'AutoPecaz Ltd','Rua Ipe,36',11947335566),
+           (303,22323435000344,'Claudius Lin Hao Co.','Tv Desmanche,12',11983834477),
+           (304,23174239472478,'Manezinho Cofap Amortecedores','Av do Estado,3500',11944335000),
+		   (305,27348927489378,'COBREQ do Brasil','Av Regis Bittencouris,78',11955667000),
+           (306,23549854958850,'Filips do Congo','Rua Porto Feliz,50',11945657823); 
 
 -- persitência de dados em pecas
 
-insert into pecas(PeçasAdquiridasTerceiros)
-	values ('oleo de cambio, oleo de motor, filtro de oleo motor'),
-		   ('lampadas h1, lampadas h7, lampadas R21'),
-           ('coxim motor, coxim cambio'),
-           ('velas motor, bobina eletrica, cabos de vela');
+insert into pecas(idPAutoPecas, idPOrdemServico, Valor, Pecas)
+	values (301,29,750,'Kit coxim motor, velas, cabos e bobinas'),
+           (302,29,550,'Kit coxim cambio, embreagem, atuador e fluido'),
+           (303,31,525,'Kit oleo motor, oleo cambio, filtro oleo motor'),
+           (304,32,2000,'Kit batentes, amortecedores e guarda pó'),
+           (305,30,440,'Kit fluido, discos e pastilhas de freio'),
+           (306,30,150,'Kit lampadas H7, H1, R21 e R');
     
 -- persitência de dados em ordem de servico 
 
-insert into ordemservico(NumOS, DtEmissao, DtConclusao, VrPeças, MaoDeObra, VrTotal, ClienteStatusOS)
-	values (29,'2022/09/20','2022/09/22',540.00,2500.00,3040.00,'aprovada'),
-		   (30,'2022/09/21','2022/09/23',700.00,1300.00,2000.00,'aprovada'),
-           (31,'2022/09/25','2022/09/30',3000.00,4000.00,7000.00,'aprovada');
+insert into ordemservico(idOrdemServico, idOClientes, idOEMecanicos, DtEmissao, DtConclusao, ClienteStatusOS, Hr_Aval, Hr_Manut, Hr_Superv, StatusOS, idOTabelaMO)
+	values (29,201,102,'2022/09/20','2022/09/20','aprovada',1,3,1,'Concluida',2022),
+           (30,202,104,'2022/09/21','2022/09/22','aprovada',1,2,1,'Concluida',2022),
+           (31,202,105,'2022/09/21','2022/09/22','aprovada',1,2,1,'Concluida',2022),
+           (32,203,106,'2022/09/25','2022/09/25','aprovada',1,3,1,'Concluida',2022);
 
--- persitência de dados em execução de servicos
 
-insert into execucaoservicos(ServicosExecutados, StatusOS)
-	values ('Fluidos','Em execução'),
-	       ('Motor, Cambio','Supervisao'),
-           ('Suspensao','Concluida');
 
 
 -- queries complexas para recuperação de dados
+
+-- relação de clientes da oficina mecanica
+
+SELECT idClientes, Nome AS Clientes, Registro_veiculo FROM pessoas, clientes WHERE idPessoas = idCPessoas;
+
+-- relação de mecânicos da oficina mecanica
+
+SELECT idMecanicos, Nome AS Mecanicos, Especialista FROM pessoas, mecanicos WHERE idPessoas = idMPessoas;
+
+-- relação de fornecedores de peças da oficina mecânica
+
+SELECT p.idPAutoPecas, a.Rz_social AS Fornecedores, p.Pecas, p.Valor FROM autopecas a JOIN pecas p ON a.idAutoPecas = p.idPAutoPecas;
+
+-- relatório de ordens de serviços por cliente
+
+SELECT ps.Nome AS Clientes, o.idOrdemServico FROM pessoas ps
+	INNER JOIN clientes c ON ps.idPessoas = c.idCPessoas
+    INNER JOIN ordemservico o ON c.idClientes = o.idOClientes
+    GROUP BY o.idOrdemServico
+    HAVING COUNT (o.idOrdemServico) > 0;
+
+-- relatório de avaliações automotiva aprovadas pelos clientes
+
+SELECT ps.Nome, v.Marca, v.Modelo, o.DtEmissao, o.idOrdemServico AS OS,
+	((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)) AS VrServico, pe.Valor AS VrPecas,
+    ((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)+pe.Valor) AS Total,
+    o.ClienteStatusOS AS Aprovacao, pe.Pecas FROM pessoas ps
+    
+	INNER JOIN clientes c ON ps.idPessoas = c.idCPessoas
+    INNER JOIN ordemservico o ON c.idClientes = o.idOClientes
+    INNER JOIN veiculos v ON c.idClientes = v.idVClientes
+    INNER JOIN tabelaMO t ON t.idTabelaMO = o.idOTabelaMO
+    INNER JOIN pecas pe ON pe.idPOrdemServico = o.idOrdemServico
+    
+    ORDER BY ((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)+pe.Valor);
+    
+-- relatório de serviços realizados concluídos e revisados para pagamento
+
+SELECT ps.Nome, v.Marca, v.Modelo, o.idOrdemServico AS OS,
+	((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)) AS VrServico, pe.Valor AS VrPecas,
+    ((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)+pe.Valor) AS Total,
+     o.StatusOS, o.DtConclusao FROM pessoas ps
+    
+	INNER JOIN clientes c ON ps.idPessoas = c.idCPessoas
+    INNER JOIN ordemservico o ON c.idClientes = o.idOClientes
+    INNER JOIN veiculos v ON c.idClientes = v.idVClientes
+    INNER JOIN tabelaMO t ON t.idTabelaMO = o.idOTabelaMO
+    INNER JOIN pecas pe ON pe.idPOrdemServico = o.idOrdemServico
+    
+    ORDER BY ((o.Hr_Aval*t.CHora_Aval)+(o.Hr_Manut*t.CHora_Manut)+(o.Hr_Superv*t.CHora_Superv)+pe.Valor);
+    
+    
+    
+    
+    
+    
+     
+    
+    
